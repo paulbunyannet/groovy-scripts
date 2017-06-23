@@ -24,3 +24,5 @@ def envToGroovy(original, output) {
   fileOperations([fileDeleteOperation(excludes: '', includes: output)])
 
 }
+
+return this;
