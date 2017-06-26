@@ -21,7 +21,8 @@ def envToGroovy(original, output) {
 
   // load the env groovy file and remove it afterwards
   load output
-  fileOperations([fileDeleteOperation(excludes: '', includes: output)])
+  // now remove the temp groovy file
+  sh "rm -f ${output}"
 
 }
 
