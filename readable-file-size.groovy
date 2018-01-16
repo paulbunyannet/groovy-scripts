@@ -1,6 +1,7 @@
 /**
  * Return human readable file size
  * https://stackoverflow.com/a/5599842/405758
+ * ## This function will error out likley if run in a Jenkins job in  Groovy Sandbox
  */
 
 def version = '1.0'
