@@ -25,4 +25,15 @@ def isMainRepoAndMaster(String master="Web Development"){
     return false
 }
 
+/**
+ * Is the current gitlab user master and using either the develop or master branch?
+ * @param string master the master user
+ */
+def isMainRepoAndDevelopOrMaster(String master="Web Development"){
+  if (isMainRepoAndDevelop(master) || isMainRepoAndMaster(master)) {
+    return true
+  }
+  return false
+}
+
 return this;
