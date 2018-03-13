@@ -7,12 +7,12 @@ def version = '1.0'
  */
 def isWritable(isWritableFolder) {
   // If the folder doesn't already exist, then create it
-  def writableFolder = new File("${isWritableFolder}")
-  if(!writableFolder.exists()) {
+  if(File.notExists(isWritableFolder)) {
+    writableFolder = new File(isWritableFolder)
     writableFolder.mkdirs()
   }
-  def isWritableSnippet = new File("isWritable.php")
-  if(!isWritableSnippet.exists()) {
+
+  if(File.notExists("isWritable.php")) {
     // get the writable script
     sh "curl --silent -k https://gitlab.paulbunyan.net/snippets/9/raw > isWritable.php"
   }
