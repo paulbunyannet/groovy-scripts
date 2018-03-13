@@ -4,15 +4,12 @@ def version = '1.0'
  * Check if folder is writable. Optionally make the folder if
  * it does not already exist.
  * @param string isWritableFolder the folder to check
- * @param bool createFolder whether to create the folder before checking
  */
-def isWritable(isWritableFolder, boolean createFolder=true) {
+def isWritable(isWritableFolder) {
   // If the folder doesn't already exist, then create it
-  if(createFolder) {
-    def writableFolder = new File("${isWritableFolder}")
-    if(!writableFolder.exists()) {
-      writableFolder.mkdirs()
-    }
+  def writableFolder = new File("${isWritableFolder}")
+  if(!writableFolder.exists()) {
+    writableFolder.mkdirs()
   }
   def isWritableSnippet = new File("isWritable.php")
   if(!isWritableSnippet.exists()) {
