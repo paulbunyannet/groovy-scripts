@@ -1,15 +1,16 @@
-def version = '1.0'
+import java.io.File
 
 /**
  * Check if folder is writable. Optionally make the folder if
  * it does not already exist.
  * @param string isWritableFolder the folder to check
  */
-def isWritable(isWritableFolder) {
+def isWritable(String isWritableFolder) {
 
     // make folders if it does not exist
-    if (File.notExists(isWritableFolder)) {
-        sh "docker-compose exec -T code bash -c \"mkdir -p ${isWritableFolder}\""
+    File wf = new File(isWritableFolder)
+    if (!wf.exists()) {
+        wf.mkdirs()
     }
 
     // Set the ownership of that folder to the www-data user
