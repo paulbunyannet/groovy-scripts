@@ -6,7 +6,7 @@ import java.io.File
  * @param string isWritableFolder the folder to check
  */
 def isWritable(String isWritableFolder) {
-
+    echo "Running the isWritable method with folder ${isWritableFolder}"
     // make folders if it does not exist
     File wf = new File(isWritableFolder)
     if (!wf.exists()) {
