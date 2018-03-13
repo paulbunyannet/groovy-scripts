@@ -8,7 +8,7 @@ def version = '1.0'
  */
 def isWritable(isWritableFolder, boolean createFolder=true) {
   // If the folder doesn't already exist, then create it
-  if(assert createFolder) {
+  if(createFolder) {
     def writableFolder = new File("${isWritableFolder}")
     if(!writableFolder.exists()) {
       writableFolder.mkdirs()
