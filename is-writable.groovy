@@ -1,26 +1,27 @@
 import java.io.File
 
 /**
- * Check if folder is writable. Optionally make the folder if
- * it does not already exist.
+ * Check if folder is writable inside docker.
  * @param String isWritableFolder the folder to check
  * @param String basePath the folder to work in (workspace)
+ * @param String container container to run the command in
  */
-def isWritable(String isWritableFolder, String basePath) {
+def isWritableInDocker(String folder, String basePath, String container) {
 
-    echo "Running the isWritable method with folder ${isWritableFolder}"
+    echo "Running the isWritable method with folder ${basePath}/${folder}"
 
     // make folders if it does not exist
-    File wf = new File("${basePath}/${isWritableFolder}")
-    if (!wf.exists()) {
-        wf.mkdirs()
+    File makeFolder = new File("${basePath}/${folder}")
+    if (!makeFolder.exists()) {
+        echo "${basePath}/${folder} does not exist and will be created"
+        makeFolder.mkdirs()
     }
 
     // Set the ownership of that folder to the www-data user
-    sh "cd ${basePath}; docker-compose exec -T code bash -c \"chown -R www-data:www-data ${isWritableFolder}\""
+    sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"chown -R www-data:www-data ${folder}\""
 
     // Set the permissions for the www-data user user
-    sh "cd ${basePath}; docker-compose exec -T code bash -c \"chmod 755 -fR ${isWritableFolder}\""
+    sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"chmod 755 -fR ${folder}\""
 
     if (File.notExists("${basePath}/isWritable.php")) {
         // get the writable script
@@ -28,7 +29,7 @@ def isWritable(String isWritableFolder, String basePath) {
         sh "curl --silent -k https://gitlab.paulbunyan.net/snippets/9/raw > ${basePath}/isWritable.php"
     }
     // do a check that the www-data user can write to this folder now.
-    sh "cd ${env.WORKSPACE}; docker-compose exec -T code bash -c \"php isWritable.php --dir=${isWritableFolder}\""
+    sh "cd ${env.WORKSPACE}; docker-compose exec -T ${container} bash -c \"php isWritable.php --dir=${folder}\""
 }
 
 return this
