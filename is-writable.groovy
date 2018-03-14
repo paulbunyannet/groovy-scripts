@@ -23,7 +23,8 @@ def isWritableInDocker(String folder, String basePath, String container) {
     // Set the permissions for the www-data user user
     sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"chmod 755 -fR ${folder}\""
 
-    if (File.notExists("${basePath}/isWritable.php")) {
+    File isWritable = new File("${basePath}/isWritable.php")
+    if (!isWritable.exists()) {
         // get the writable script
         echo "Getting the permissions checking script"
         sh "curl --silent -k https://gitlab.paulbunyan.net/snippets/9/raw > ${basePath}/isWritable.php"
