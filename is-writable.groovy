@@ -13,8 +13,9 @@ def isWritableInDocker(String folder, String basePath, String container) {
     // make folders if it does not exist
     File makeFolder = new File("${basePath}/${folder}")
     if (!makeFolder.exists()) {
-        echo "${basePath}/${folder} does not exist and will be created"
+        echo "${basePath}/${folder} does not exist and will be created."
         makeFolder.mkdirs()
+        echo "${makeFolder.toString()} was created."
     }
 
     // Set the ownership of that folder to the www-data user
