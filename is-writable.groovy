@@ -19,10 +19,10 @@ def isWritableInDocker(String folder, String basePath, String container) {
     }
 
     // Set the ownership of that folder to the www-data user
-    sh "cd ${basePath}; docker-compose exec -T ${container} chown -R www-data:www-data \"${folder}\""
+    sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"chown -R www-data:www-data '${folder}'\""
 
     // Set the permissions for the www-data user user
-    sh "cd ${basePath}; docker-compose exec -T ${container} chmod 755 -fR \"${folder}\""
+    sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"chmod 755 -fR '${folder}'\""
 
     File isWritable = new File("${basePath}/isWritable.php")
     if (!isWritable.exists()) {
@@ -31,7 +31,7 @@ def isWritableInDocker(String folder, String basePath, String container) {
         sh "curl --silent -k https://gitlab.paulbunyan.net/snippets/9/raw > ${basePath}/isWritable.php"
     }
     // do a check that the www-data user can write to this folder now.
-    sh "cd ${env.WORKSPACE}; docker-compose exec -T ${container} php isWritable.php --dir=\"${folder}\""
+    sh "cd ${env.WORKSPACE}; docker-compose exec -T ${container} bash -c \"php isWritable.php --dir='${folder}'\""
 }
 
 return this
