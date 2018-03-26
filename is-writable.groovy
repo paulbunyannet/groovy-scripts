@@ -13,9 +13,12 @@ def isWritableInDocker(String folder, String basePath, String container) {
     // make folders if it does not exist
     File makeFolder = new File("${basePath}/${folder}")
     if (!makeFolder.exists()) {
-        echo "${basePath}/${folder} does not exist and will be created."
-        makeFolder.mkdirs()
-        echo "${makeFolder.toString()} was created."
+        echo "${makeFolder.toString()} does not exist and will be created."
+        if(makeFolder.mkdirs()) {
+            echo "${makeFolder.toString()} was created."
+        } else {
+            return error("${makeFolder.toString()} could not be created.")
+        }
     }
 
     // Set the ownership of that folder to the www-data user
@@ -32,6 +35,7 @@ def isWritableInDocker(String folder, String basePath, String container) {
     }
     // do a check that the www-data user can write to this folder now.
     sh "cd ${env.WORKSPACE}; docker-compose exec -T ${container} bash -c \"php isWritable.php --dir=${folder}\""
+
 }
 
 return this
