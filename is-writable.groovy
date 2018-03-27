@@ -6,7 +6,7 @@ import java.io.File
  * @param String basePath the folder to work in (workspace)
  * @param String container container to run the command in
  */
-def isWritableInDocker(String folder, String basePath, String container) {
+def isWritableInDocker(String folder, String basePath, String container, String user="www-data:www-data") {
 
     echo "Running the isWritable method with folder ${basePath}/${folder}"
 
@@ -22,7 +22,7 @@ def isWritableInDocker(String folder, String basePath, String container) {
     }
 
     // Set the ownership of that folder to the www-data user
-    sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"chown -R www-data:www-data ${folder}\""
+    sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"chown -R ${user} ${folder}\""
 
     // Set the permissions for the www-data user user
     sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"chmod 755 -fR ${folder}\""
