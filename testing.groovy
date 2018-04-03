@@ -6,7 +6,7 @@ def gitlab
 def isWritable
 def groovy
 groovy = fileLoader.withGit('https://github.com/paulbunyannet/groovy-scripts.git', 'master', '', '') {
-	comments = file.load('commentBlock')
+	comments = file.load('comments')
 	gitlab = fileLoader.load('gitlab')
 	isWritable = fileLoader.load('is-writable')
 }
