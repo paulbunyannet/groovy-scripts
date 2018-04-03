@@ -2,22 +2,14 @@
 
 def commentBlock(String title="", String body="" ) {
 	Integer lineLength = 75
-	StringBuilder sb = new StringBuilder()
-	for (int i = 0; i < body.length(); i++) {
-		if (i > 0 && (i % lineLength == 0)) {
-			sb.append("\n")
-		}
-
-		sb.append(body.charAt(i))
-	}
-
-	body = sb.toString()
+	String linePrefix = "    | "
+	parsedBody = sh(script:"echo ${body} | sed -e \"s/.\\{${lineLength}\\}/&\\n${linePrefix}/g\"", returnStdout: true)
 	echo "    /*\n" +
 			"    |--------------------------------------------------------------------------\n" +
 			"    | ${title}\n" +
 			"    |--------------------------------------------------------------------------\n" +
 			"    |\n" +
-			"    | ${body}\n" +
+			"    | ${parsedBody.trim()}\n" +
 			"    */"
 }
 return this
