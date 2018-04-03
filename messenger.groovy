@@ -77,7 +77,9 @@ def _start(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STA
     echo "${Globals.DIVIDER}"
 }
 
-/* Output a formatted success message */
+/* Output a formatted success message
+* @return boolean
+* */
 def _success(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
     if(timestamp == Globals.DATE_JOB_STARTED){
         timestamp = "${BUILD_TIMESTAMP}"
@@ -93,18 +95,13 @@ def _success(String stage, String d_message = "", timestamp = Globals.DATE_JOB_S
         echo "There is a warning as the stage ${stage} completed successfully but a previous step didn't";
         echo "------------------------------------------------------------------------------------------";
         echo "------------------------------------------------------------------------------------------";
-        _error(stage, d_message, timestamp)
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
+        return true
     }else{
         echo "\n${Globals.DIVIDER}${Globals.DIVIDER}"
         println "\u2713 ${stage} completed ${d_message} at ${timestamp} \u263A!"
         echo "${Globals.DIVIDER}"
     }
+    return false
 }
 
 /* Output a formatted warning message */
@@ -130,9 +127,11 @@ def _error(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STA
         Globals.ERROR_EXISTED_stage=stage
         Globals.ERROR_EXISTED_message=d_message
         Globals.ERROR_EXISTED_timestamp=timestamp
-        failTheJob()
+        return true
     }else{
         return error("${Globals.ERROR_EXISTED_stage} failed: ${Globals.ERROR_EXISTED_message} on ${Globals.ERROR_EXISTED_timestamp}")
     }
+    return false
 }
+
 return this
