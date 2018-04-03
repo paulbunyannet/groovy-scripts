@@ -1,17 +1,32 @@
 #!/usr/bin/groovy
-import java.io.File
 
-def comments
-def gitlab
-def isWritable
-def groovy
-groovy = fileLoader.withGit('https://github.com/paulbunyannet/groovy-scripts.git', 'master', '', '') {
-	comments = file.load('comments')
-	gitlab = fileLoader.load('gitlab')
-	isWritable = fileLoader.load('is-writable')
-}
+/**
+ * Prep and run tests with codeception
+ * @param params
+ * Params keys:
+ * baseString 	-> The folder to run tests in
+ * container 	-> The container to run the tests in
+ * permissions	-> Permissions to use when making items writable
+ * upstreamUser -> The name of the upstream user, used to check whether we should be running tests verbosely or not
+ * comments 	-> instance of comments.groovy
+ * isWritable 	-> instance of is-writable.groovy
+ * gitlab 		-> instance of gitlab.groovy
+ * @return
+ */
+//String basePath = env.WORKSPACE, String container = "code", String permissions = "www-data:www-data", String upstreamUser = "Web Development"
+def runCodeceptionTests(Object params) {
+	try {
+		String container 	= params.container
+		String basePath 	= params.basePath
+		String permissions 	= params.permissions
+		String upstreamUser = params.upstreamUser
+		def comments 		= params.comments
+		def isWritable 		= params.isWritable
+		def gitlab 			= params.gitlab
+	} catch (intError) {
+		return error(intError.getMessage())
+	}
 
-def runCodeceptionTests(String basePath = env.WORKSPACE, String container = "code", String permissions = "www-data:www-data", String upstreamUser = "Web Development") {
 	comments.commentBlock("Starting Tests", "Running tests in the ${container} container!" as String)
 
 	try {
