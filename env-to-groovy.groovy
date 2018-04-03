@@ -2,27 +2,32 @@
 def version = '1.0'
 
 def envToGroovy(original, output) {
-  sh "cp ${original} ${output}"
-  sh "chmod 777 ${output}"
 
-  // remove all comment lines
-  // https://stackoverflow.com/questions/8206280/delete-all-lines-beginning-with-a-from-a-file#comment41301697_8206295
-  sh "sed -i '/^#/d' ${output}"
-  // add quote to end of all lines
-  // https://stackoverflow.com/a/2869736/405758
-  sh "sed -i -e 's/\$/\"/' ${output}"
-  // add quote after the equal sign
-  //https://unix.stackexchange.com/a/159369
-  sh "sed -i -e 's/=/=\"/g' ${output}"
-  // remove double quotes
-  sh "sed -i -e 's/\"\"/\"/g' ${output}"
-  // add return at the end of the file
-  sh "echo \"\nreturn this;\" >> ${output}"
+  // the origina file that will be used a base for the groovy script output
+  File originalFile = new File(original)
+  // the outputed groovy script path
+  File outputFile = new File(output)
+  // absolute path to the output file
+  String absoluteOutputPath = outputFile.getAbsolutePath();
+  // path relative the the output file
+  String thisPath = absoluteOutputPath.substring(0,absoluteOutputPath.lastIndexOf(File.separator));
+  // processing script file name
+  String scriptName="envToGroovy.php"
+  // download path of the processing script
+  String scriptPath="https://gitlab.paulbunyan.net/snippets/2/raw"
+
+  // get the script
+  sh "curl -k ${scriptPath} --output ${thisPath}/${scriptName}"
+  // run the script to cleanup the env for output
+  sh "php ${thisPath}/${scriptName} ${originalFile.toString()} ${outputFile.toString()}"
 
   // load the env groovy file and remove it afterwards
   load output
+  //echo "${outputFile.toString()} is loaded, the APP_ENV is set to \"${APP_ENV}\""
   // now remove the temp groovy file
   sh "rm -f ${output}"
+  // remove the script, it's no longer needed
+  sh "rm -f ${thisPath}/${scriptName}"
 
 }
 
