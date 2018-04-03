@@ -78,7 +78,7 @@ def _start(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STA
 }
 
 /* Output a formatted success message */
-def _success(failTheJob, String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
+def _success(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
     if(timestamp == Globals.DATE_JOB_STARTED){
         timestamp = "${BUILD_TIMESTAMP}"
     }
@@ -93,7 +93,7 @@ def _success(failTheJob, String stage, String d_message = "", timestamp = Global
         echo "There is a warning as the stage ${stage} completed successfully but a previous step didn't";
         echo "------------------------------------------------------------------------------------------";
         echo "------------------------------------------------------------------------------------------";
-        _error(stage, d_message, timestamp);
+        _error(stage, d_message, timestamp)
         echo "------------------------------------------------------------------------------------------";
         echo "------------------------------------------------------------------------------------------";
         echo "------------------------------------------------------------------------------------------";
@@ -118,7 +118,7 @@ def _warning(String stage, String d_message = "", timestamp = Globals.DATE_JOB_S
 }
 
 /* output a formatted error message */
-def _error(failTheJob, String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
+def _error(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
     if(timestamp == Globals.DATE_JOB_STARTED){
         timestamp = "${BUILD_TIMESTAMP}"
     }
