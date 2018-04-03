@@ -1,4 +1,4 @@
-#!/usr/bin/env groovy
+def version = '1.21'
 def _send(String d_message, String web_url="", String my_messages="", String icon="") {
     try{
         def my_icon = "https://emojipedia-us.s3.amazonaws.com/thumbs/120/apple/118/skull-and-crossbones_2620.png"
