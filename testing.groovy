@@ -20,39 +20,48 @@ def runCodeceptionTests(Object params) {
 		String basePath 	= params.basePath
 		String permissions 	= params.permissions
 		String upstreamUser = params.upstreamUser
-		def comments 		= params.comments
-		def isWritable 		= params.isWritable
-		def gitlab 			= params.gitlab
+
+		File tempDir = new File("${basePath}/tmp")
+		if (!tempDir.exists()) {
+			tempDir.mkdirs()
+		}
+		String groovies = "gitlab.groovy,is-writable.groovy,comments.groovy"
+		def getGroovies = groovies.split(',')
+		getGroovies.each {
+			sh "curl --silent -k https://raw.githubusercontent.com/paulbunyannet/groovy-scripts/master/${it} > ${tempDir.toString()}/${it}"
+			evaluate(new File("${tempDir.toString()}/${it}"))
+		}
+
 	} catch (intError) {
 		return error(intError.getMessage())
 	}
 
-	comments.commentBlock("Starting Tests", "Running tests in the ${container} container!" as String)
+	commentBlock("Starting Tests", "Running tests in the ${container} container!" as String)
 
 	try {
 		//migrate before running anything
 		// if artisan exists then run migrations
 		File artisan = new File("${basePath}/artisan")
 		if (artisan.exists() && artisan.isFile()) {
-			comments.commentBlock("Migrations", "Runing migrations with Artisan")
+			commentBlock("Migrations", "Running migrations with Artisan")
 			sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"php artisan migrate\""
 		}
 
 		// If a generic migration script exists then try and run it
 		File genericMigrate = new File("${basePath}/migrate.php")
 		if (!artisan.exists() && genericMigrate.exists() && genericMigrate.isFile()) {
-			comments.commentBlock("Migrations", "Running the generic migration runner ${genericMigrate.toString()}")
+			commentBlock("Migrations", "Running the generic migration runner ${genericMigrate.toString()}")
 			sh "cd ${basePath}; docker-compose exec -T ${container} bash -c \"php migrate.php\""
 		}
 		String writable = "cache,storage,tests"
 		def makeWritableFolders = writable.split(',')
-		comments.commentBlock("Writable", "Making the folders ${basePath}/{${writable}} writable for tests.")
+		commentBlock("Writable", "Making the folders ${basePath}/{${writable}} writable for tests.")
 		makeWritableFolders.each {
-			isWritable.isWritableInDocker(it, basePath, container, permissions)
+			isWritableInDocker(it, basePath, container, permissions)
 		}
 		dir(basePath) {
 			File cThreeErrorLog = new File("${basePath}/c3_error.log")
-			comments.commentBlock("Remote Coverage Error Log", "Making sure the ${cThreeErrorLog.toString()} exists and is writable.")
+			commentBlock("Remote Coverage Error Log", "Making sure the ${cThreeErrorLog.toString()} exists and is writable.")
 			if (!cThreeErrorLog.exists()) {
 				sh "echo \"#c3_error.log\" > c3_error.log"
 			}
@@ -79,13 +88,13 @@ def runCodeceptionTests(Object params) {
 	try {
 		dir(basePath) {
 			String flags
-			if (gitlab.isMainRepoAndMaster(upstreamUser)) {
+			if (isMainRepoAndMaster(upstreamUser)) {
 				flags = "--fail-fast --coverage --coverage-html --coverage-xml"
-				comments.commentBlock("Codeception tests", "Running Codeception tests as \"${upstreamUser}\" with flags \"${flags}\"")
+				commentBlock("Codeception tests", "Running Codeception tests as \"${upstreamUser}\" with flags \"${flags}\"")
 				sh "docker-compose exec -T ${container} bash -c \"vendor/bin/codecept run ${flags}\""
 			} else {
 				flags = "--fail-fast --coverage --coverage-html --coverage-xml --steps"
-				comments.commentBlock("Codeception tests", "Running Codeception tests with flags \"${flags}\"")
+				commentBlock("Codeception tests", "Running Codeception tests with flags \"${flags}\"")
 				sh "docker-compose exec -T ${container} bash -c \"vendor/bin/codecept run ${flags}\""
 			}
 		}
