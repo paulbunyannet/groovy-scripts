@@ -66,9 +66,9 @@ def _send(String d_message, String web_url="", String my_messages="", String ico
 * Output a formatted start message message
 * @prop String stage
 * @prop String message
-* @prop mixed timestamp
+* @prop String timestamp
 */
-def _start(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
+def _start(String stage, String d_message = "", timestamp = "") {
     if(timestamp == Globals.DATE_JOB_STARTED){
         timestamp = "${BUILD_TIMESTAMP}"
     }
@@ -80,7 +80,7 @@ def _start(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STA
 /* Output a formatted success message
 * @return boolean
 * */
-def _success(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
+def _success(String stage, String d_message = "", timestamp = "") {
     if(timestamp == Globals.DATE_JOB_STARTED){
         timestamp = "${BUILD_TIMESTAMP}"
     }
@@ -105,7 +105,7 @@ def _success(String stage, String d_message = "", timestamp = Globals.DATE_JOB_S
 }
 
 /* Output a formatted warning message */
-def _warning(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
+def _warning(String stage, String d_message = "", timestamp = "") {
     if(timestamp == Globals.DATE_JOB_STARTED){
         timestamp = "${BUILD_TIMESTAMP}"
     }
@@ -115,7 +115,7 @@ def _warning(String stage, String d_message = "", timestamp = Globals.DATE_JOB_S
 }
 
 /* output a formatted error message */
-def _error(String stage, String d_message = "", timestamp = Globals.DATE_JOB_STARTED) {
+def _error(String stage, String d_message = "", timestamp = "") {
     if(timestamp == Globals.DATE_JOB_STARTED){
         timestamp = "${BUILD_TIMESTAMP}"
     }
