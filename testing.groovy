@@ -2,24 +2,15 @@
 
 /**
  * Prep and run tests with codeception
- * @param params
- * Params keys:
- * baseString 	-> The folder to run tests in
- * container 	-> The container to run the tests in
- * permissions	-> Permissions to use when making items writable
- * upstreamUser -> The name of the upstream user, used to check whether we should be running tests verbosely or not
- * comments 	-> instance of comments.groovy
- * isWritable 	-> instance of is-writable.groovy
- * gitlab 		-> instance of gitlab.groovy
+ * @param baseString The folder to run tests in
+ * @param container The container to run the tests in
+ * @param permissions Permissions to use when making items writable
+ * @param upstreamUser The name of the upstream user, used to check whether we should be running tests verbosely or not
  * @return
  */
 //String basePath = env.WORKSPACE, String container = "code", String permissions = "www-data:www-data", String upstreamUser = "Web Development"
-def runCodeceptionTests(Object params) {
+def runCodeceptionTests(String basePath, String container, String permissions, String upstreamUser ) {
 	try {
-		String container 	= params.container
-		String basePath 	= params.basePath
-		String permissions 	= params.permissions
-		String upstreamUser = params.upstreamUser
 
 		File tempDir = new File("${basePath}/tmp")
 		if (!tempDir.exists()) {
