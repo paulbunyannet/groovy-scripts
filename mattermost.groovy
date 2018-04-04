@@ -1,4 +1,4 @@
-def version = '1.21'
+def version = '2'
 def _send(String d_message, String web_url="", String my_messages="", String icon="") {
     try{
         def my_icon = "https://emojipedia-us.s3.amazonaws.com/thumbs/120/apple/118/skull-and-crossbones_2620.png"
@@ -59,79 +59,6 @@ def _send(String d_message, String web_url="", String my_messages="", String ico
     catch(ooops){
         echo "found it.... ${ooops.getMessage()}"
     }
-}
-
-/*
-* startMessage
-* Output a formatted start message message
-* @prop String stage
-* @prop String message
-* @prop String timestamp
-*/
-def _start(String stage, String d_message = "", timestamp = "") {
-    if(timestamp == Globals.DATE_JOB_STARTED){
-        timestamp = "${BUILD_TIMESTAMP}"
-    }
-    echo "\n${Globals.DIVIDER}${Globals.DIVIDER}"
-    println "\u2605 Started ${stage} ${d_message} at ${timestamp} \u2605"
-    echo "${Globals.DIVIDER}"
-}
-
-/* Output a formatted success message
-* @return boolean
-* */
-def _success(String stage, String d_message = "", timestamp = "") {
-    if(timestamp == Globals.DATE_JOB_STARTED){
-        timestamp = "${BUILD_TIMESTAMP}"
-    }
-    if("${Globals.ERROR_EXISTED}"=="true"){
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        echo "There is a warning as the stage ${stage} completed successfully but a previous step didn't";
-        echo "------------------------------------------------------------------------------------------";
-        echo "------------------------------------------------------------------------------------------";
-        return true
-    }else{
-        echo "\n${Globals.DIVIDER}${Globals.DIVIDER}"
-        println "\u2713 ${stage} completed ${d_message} at ${timestamp} \u263A!"
-        echo "${Globals.DIVIDER}"
-    }
-    return false
-}
-
-/* Output a formatted warning message */
-def _warning(String stage, String d_message = "", timestamp = "") {
-    if(timestamp == Globals.DATE_JOB_STARTED){
-        timestamp = "${BUILD_TIMESTAMP}"
-    }
-    echo "\n${Globals.DIVIDER}${Globals.DIVIDER}"
-    println "\u2297 ${stage} warning: ${d_message} at ${timestamp} \u1F631!"
-    echo "${Globals.DIVIDER}"
-}
-
-/* output a formatted error message */
-def _error(String stage, String d_message = "", timestamp = "") {
-    if(timestamp == Globals.DATE_JOB_STARTED){
-        timestamp = "${BUILD_TIMESTAMP}"
-    }
-    echo "\n${Globals.DIVIDER}${Globals.DIVIDER}"
-    println "\u2297 ${stage} failed: ${d_message} \u1F631!"
-    echo "${Globals.DIVIDER}"
-    if("${Globals.ERROR_EXISTED}"!="true"){
-        Globals.ERROR_EXISTED="true"
-        Globals.ERROR_EXISTED_stage=stage
-        Globals.ERROR_EXISTED_message=d_message
-        Globals.ERROR_EXISTED_timestamp=timestamp
-        return true
-    }else{
-        return error("${Globals.ERROR_EXISTED_stage} failed: ${Globals.ERROR_EXISTED_message} on ${Globals.ERROR_EXISTED_timestamp}")
-    }
-    return false
 }
 
 return this
