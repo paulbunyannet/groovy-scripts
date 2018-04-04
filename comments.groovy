@@ -5,9 +5,9 @@ def commentBlock(String title="", String body="" ) {
 	String linePrefix = "    | "
 	parsedBody = sh(script:"echo ${body} | sed -e \"s/.\\{${lineLength}\\}/&\\n${linePrefix}/g\"", returnStdout: true)
 	echo "    /*\n" +
-			"    |--------------------------------------------------------------------------\n" +
+			"    |${'-'.multiply(lineLength)}\n" +
 			"    | ${title}\n" +
-			"    |--------------------------------------------------------------------------\n" +
+			"    |${'-'.multiply(lineLength)}\n" +
 			"    |\n" +
 			"    | ${parsedBody.trim()}\n" +
 			"    */"
