@@ -12,5 +12,5 @@ def commentBlock(String title="", String body="" ) {
 			"    |\n" +
 			"    | ${lines.join(lineJoin)}\n" +
 			"    */"
-}
+} 
 return this
