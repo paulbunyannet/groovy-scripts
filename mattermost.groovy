@@ -1,5 +1,5 @@
 def version = '2'
-def _send(String d_message, String web_url="", String my_messages="", String icon="") {
+def _send(String d_message, String web_url="", String my_messages="", String icon="", Globals=[], env=[], repoName="", mattermostSend="") {
     try{
         def my_icon = "https://emojipedia-us.s3.amazonaws.com/thumbs/120/apple/118/skull-and-crossbones_2620.png"
         def my_color = "#ff0000"
@@ -22,7 +22,7 @@ def _send(String d_message, String web_url="", String my_messages="", String ico
             deploy = true;
             my_icon = "https://emojipedia-us.s3.amazonaws.com/thumbs/60/apple/114/shocked-face-with-exploding-head_1f92f.png"
             my_color = "#ff0000"
-            my_message = "JOB FAILED! (<https://jenkinstrial.pbndev.net/from_jenkins_failed/${gitlabSourceRepoName}/${Globals.ARCHIVE_ZIP}| Download the test output folder ${Globals.ARCHIVE_ZIP}.zip >)"
+            my_message = "JOB FAILED! (<https://jenkinstrial.pbndev.net/from_jenkins_failed/${repoName}/${Globals.ARCHIVE_ZIP}| Download the test output folder ${Globals.ARCHIVE_ZIP}.zip >)"
         }
         if( d_message == "MERGE"){
             my_icon = "https://cdn4.iconfinder.com/data/icons/socialcones/508/Gitlab-256.png";
@@ -37,7 +37,7 @@ def _send(String d_message, String web_url="", String my_messages="", String ico
         if(deploy == "true"){
             dir("${env.WORKSPACE}") {
                 withCredentials([sshUserPrivateKey(credentialsId: "646ef7ce-60bc-4480-9324-09c8928bf457", keyFileVariable: 'key', passphraseVariable: '', usernameVariable: 'username')]) {
-                    String TO_WO_FILE = "/home/jenkinstrial/public_html/from_jenkins_failed/${gitlabSourceRepoName}"
+                    String TO_WO_FILE = "/home/jenkinstrial/public_html/from_jenkins_failed/${repoName}"
                     String TO_WITH_FILE = "${TO_WO_FILE}/${Globals.ARCHIVE_ZIP}"
                     String FROM_WITH_FILE = "${env.WORKSPACE}/${Globals.ARCHIVE_ZIP}"
                     echo "sending zip to jenkinstrial"
