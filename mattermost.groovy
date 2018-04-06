@@ -1,12 +1,10 @@
 #!groovy
 def _send(String d_message, String web_url="", String my_messages="", String icon="", Globals=[], env=[], gitlabSourceRepoName="") {
-
     String my_icon = "https://emojipedia-us.s3.amazonaws.com/thumbs/120/apple/118/skull-and-crossbones_2620.png"
     String my_color = "#ff0000"
     String my_message = "Nothing was passed to mattermost.sendMessage function"
     String server_account = "jenkinstrial@w2-dev.pbndev.net"
     Boolean deploy = false
-
     if( d_message == "OPTIONAL"){
         my_icon = "${icon}"
         my_color = "#2aff00"
@@ -42,9 +40,6 @@ def _send(String d_message, String web_url="", String my_messages="", String ico
             server: "${server_account}",
             deploy: deploy
     ]
-
     return sent
-
 }
-
 return this
