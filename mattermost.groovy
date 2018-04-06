@@ -1,11 +1,12 @@
-def version = '2'
-def _send(String d_message, String web_url="", String my_messages="", String icon="", Globals=[], env=[], repoName="", mattermostSend="") {
+#!groovy
+def _send(String d_message, String web_url="", String my_messages="", String icon="", Globals=[], env=[], gitlabSourceRepoName="") {
+
     try{
-        def my_icon = "https://emojipedia-us.s3.amazonaws.com/thumbs/120/apple/118/skull-and-crossbones_2620.png"
-        def my_color = "#ff0000"
-        def my_message = "Nothing was passed to mattermost.sendMessage function"
-        def server_account = "jenkinstrial@w2-dev.pbndev.net"
-        def deploy = "false"
+        String my_icon = "https://emojipedia-us.s3.amazonaws.com/thumbs/120/apple/118/skull-and-crossbones_2620.png"
+        String my_color = "#ff0000"
+        String my_message = "Nothing was passed to mattermost.sendMessage function"
+        String server_account = "jenkinstrial@w2-dev.pbndev.net"
+        Boolean deploy = false
 
         if( d_message == "OPTIONAL"){
             my_icon = "${icon}"
@@ -22,7 +23,7 @@ def _send(String d_message, String web_url="", String my_messages="", String ico
             deploy = true;
             my_icon = "https://emojipedia-us.s3.amazonaws.com/thumbs/60/apple/114/shocked-face-with-exploding-head_1f92f.png"
             my_color = "#ff0000"
-            my_message = "JOB FAILED! (<https://jenkinstrial.pbndev.net/from_jenkins_failed/${repoName}/${Globals.ARCHIVE_ZIP}| Download the test output folder ${Globals.ARCHIVE_ZIP}.zip >)"
+            my_message = "JOB FAILED! (<https://jenkinstrial.pbndev.net/from_jenkins_failed/${gitlabSourceRepoName}/${Globals.ARCHIVE_ZIP}| Download the test output folder ${Globals.ARCHIVE_ZIP} >)"
         }
         if( d_message == "MERGE"){
             my_icon = "https://cdn4.iconfinder.com/data/icons/socialcones/508/Gitlab-256.png";
@@ -34,31 +35,21 @@ def _send(String d_message, String web_url="", String my_messages="", String ico
             my_color = "#c842f4"
             my_message = "DISK SPACE WARNING! ${my_messages}"
         }
-        if(deploy == "true"){
-            dir("${env.WORKSPACE}") {
-                withCredentials([sshUserPrivateKey(credentialsId: "646ef7ce-60bc-4480-9324-09c8928bf457", keyFileVariable: 'key', passphraseVariable: '', usernameVariable: 'username')]) {
-                    String TO_WO_FILE = "/home/jenkinstrial/public_html/from_jenkins_failed/${repoName}"
-                    String TO_WITH_FILE = "${TO_WO_FILE}/${Globals.ARCHIVE_ZIP}"
-                    String FROM_WITH_FILE = "${env.WORKSPACE}/${Globals.ARCHIVE_ZIP}"
-                    echo "sending zip to jenkinstrial"
-                    try{
-                        echo "inside of making dir "
-                        sh "cd ${env.WORKSPACE}; ssh -i '${key}' -p 85 ${server_account} 'mkdir -p ${TO_WO_FILE}'";
-                        echo "inside of making dir "
-                    }catch(e){
-                        "the folder already exists, moving on... pushing the file"
-                    }
-                    echo "inside of push files dir "
-                    sh "cd ${env.WORKSPACE}; scp -i '${key}' -P 85 ${FROM_WITH_FILE} ${server_account}:${TO_WITH_FILE}";
-                    echo "inside of push files dir "
-                }
-            }
-        }
-        mattermostSend channel: "#jenkins", prext: "@all", icon: "${my_icon}", color: "${my_color}", message: "**${my_message}** **_${env.JOB_NAME}_** build # ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open build>)(<${env.BUILD_URL}/consoleFull|Open Console>)(<${env.BUILD_URL}/consoleText|Open Console as Text>)"
+        def sent
+        sent = [
+                icon: "${my_icon}",
+                color: "${my_color}",
+                message: "${my_message}",
+                server: "${server_account}",
+                deploy: deploy
+        ]
+
+        return sent
     }
     catch(ooops){
         echo "found it.... ${ooops.getMessage()}"
     }
+
 }
 
 return this
