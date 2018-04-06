@@ -2,7 +2,6 @@
 def commentBlock(String title="", String body="" ) {
 	Integer lineLength = 75
 	String linePrefix = " | "
-	//parsedBody = sh(script:"echo ${StringEscapeUtils.escapeJava(body)} | sed -e \"s/.\\{${lineLength}\\}/&\\n${linePrefix}/g\"", returnStdout: true)
 	String[] lines = body.split("(?<=\\G.{${lineLength}})")
 	String lineJoin = "\n${linePrefix}"
 	echo "/*\n" +
