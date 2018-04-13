@@ -1,4 +1,9 @@
 #!/usr/bin/groovy
+
+GString dockerComposeExecCmd(String container, String command) {
+	return "docker-compose exec -T ${container} ${command}"
+}
+
 /**
  * Run a command in docker from docker-compose exec container command
  * @param container
@@ -6,7 +11,7 @@
  * @return
  */
 def dockerComposeExec(String container, String command) {
-	sh "docker-compose exec -T ${container} ${command}"
+	sh "${dockerComposeExecCmd(container, command)}"
 }
 
 /**
