@@ -1,4 +1,10 @@
 #!/usr/bin/groovy
+/**
+ * Create a comment block
+ * @param title
+ * @param body
+ * @return
+ */
 def commentBlock(String title="", String body="" ) {
 	Integer lineLength = 75
 	String linePrefix = " | "
@@ -12,4 +18,15 @@ def commentBlock(String title="", String body="" ) {
 			" | ${lines.join(lineJoin)}\n" +
 			"*/"
 }
+/**
+ * Create an inline comment
+ * @param body
+ * @param prefix
+ * @param suffix
+ * @return
+ */
+def commentInline(String body='', String prefix="/**", String suffix="*/") {
+	echo "${prefix} ${body} ${suffix}"
+}
+
 return this
